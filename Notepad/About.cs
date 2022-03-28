@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Notepad {
-    public partial class Blank : Form {
-        public Blank() {
+    public partial class About : Form {
+        public About() {
             InitializeComponent();
         }
     }

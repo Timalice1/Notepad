@@ -9,4 +9,4 @@ C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.csproj
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.csproj.CoreCompileInputs.cache
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.exe
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.pdb
-C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.Blank.resources
+C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.About.resources

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Notepad {
     public partial class Form1 : Form {
@@ -8,32 +9,26 @@ namespace Notepad {
             InitializeComponent();
             menuSave.Enabled = false;
             menuSaveAs.Enabled = false;
+            foreach(var textField in textFields) {
+                textField.TextChanged += new EventHandler(this.Edit);
+            }
         }
 
-        private int count = 0;
-
-
-        private RichTextBox initializeTextBox(TabPage parent) {
-            var text = new RichTextBox();
-            text.Parent = parent;
-            text.Dock = DockStyle.Fill;
-            text.BorderStyle = BorderStyle.None;
-            text.SelectionFont = new System.Drawing.Font("Calibri", 14);
-            text.AcceptsTab = true;
-            return text;
-        }
+        private List<TextField> textFields = new List<TextField>();
 
         private void menuCreateNew_Click(object sender, EventArgs e) {
-            var tab = new TabPage($"tabPage{++count}");
+            var tab = new TabPage("tabPage");
             tab.BorderStyle = BorderStyle.FixedSingle;
-            var textBox = initializeTextBox(tab);
+            var textBox = new TextField(tab);
             tabControl1.TabPages.Add(tab);
             menuSaveAs.Enabled = true;
+            textBox.IsSaved = false;
+            textFields.Add(textBox);
         }
 
         private void menuClose_Click(object sender, EventArgs e) {
+            textFields.RemoveAt(tabControl1.SelectedIndex);
             tabControl1.TabPages.Remove(tabControl1.SelectedTab);
-            count--;
         }
 
         private void menuOpen_Click(object sender, EventArgs e) {
@@ -51,30 +46,32 @@ namespace Notepad {
             var tab = new TabPage(filePath);
             tabControl1.TabPages.Add(tab);
             tab.BorderStyle = BorderStyle.FixedSingle;
-            var textBox = initializeTextBox(tab);
+            var textBox = new TextField(tab);
 
             StreamReader sr = new StreamReader(filePath);
             textBox.Text = sr.ReadToEnd();
 
-            textBox.SelectionFont = new System.Drawing.Font("Calibri", 14);
             menuSave.Enabled = true;
             menuSaveAs.Enabled = true;
 
             sr.Close();
 
-            count++;
+            textBox.IsSaved = false;
+            textFields.Add(textBox);
         }
 
         private void Save(string filePath) {
             StreamWriter sw = new StreamWriter(filePath);
-            var controls = tabControl1.SelectedTab.Controls;
+            var textField = textFields[tabControl1.SelectedIndex];
 
-            sw.WriteLine(controls[0].Text);
+            textField.IsSaved = true;
+            sw.WriteLine(textField.Text);
             sw.Close();
         }
 
         private void menuSave_Click(object sender, EventArgs e) {
             Save(tabControl1.SelectedTab.Text);
+            
         }
 
         private void menuSaveAs_Click(object sender, EventArgs e) {
@@ -86,6 +83,10 @@ namespace Notepad {
             }
             menuSave.Enabled = true;
 
+        }
+
+        private void Edit(object sender, EventArgs e) {
+            textFields[tabControl1.SelectedIndex].IsSaved = false;
         }
     }
 }

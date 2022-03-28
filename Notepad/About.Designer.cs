@@ -1,5 +1,5 @@
 ﻿namespace Notepad {
-    partial class Blank {
+    partial class About {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -25,14 +25,13 @@
         private void InitializeComponent() {
             this.SuspendLayout();
             // 
-            // Blank
+            // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 442);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "Blank";
-            this.Text = "Blank";
+            this.ClientSize = new System.Drawing.Size(258, 121);
+            this.Name = "About";
+            this.Text = "About";
             this.ResumeLayout(false);
 
         }
