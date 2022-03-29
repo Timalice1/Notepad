@@ -9,20 +9,19 @@ namespace Notepad {
             InitializeComponent();
             menuSave.Enabled = false;
             menuSaveAs.Enabled = false;
-            foreach(var textField in textFields) {
-                textField.TextChanged += new EventHandler(this.Edit);
-            }
         }
 
         private List<TextField> textFields = new List<TextField>();
 
         private void menuCreateNew_Click(object sender, EventArgs e) {
             var tab = new TabPage("tabPage");
+            tabControl1.SelectedTab = tab;
             tab.BorderStyle = BorderStyle.FixedSingle;
             var textBox = new TextField(tab);
             tabControl1.TabPages.Add(tab);
             menuSaveAs.Enabled = true;
             textBox.IsSaved = false;
+
             textFields.Add(textBox);
         }
 
@@ -44,6 +43,7 @@ namespace Notepad {
             string filePath = dialog.FileName;
 
             var tab = new TabPage(filePath);
+            tabControl1.SelectedTab = tab;
             tabControl1.TabPages.Add(tab);
             tab.BorderStyle = BorderStyle.FixedSingle;
             var textBox = new TextField(tab);
@@ -57,7 +57,8 @@ namespace Notepad {
             sr.Close();
 
             textBox.IsSaved = false;
-            textFields.Add(textBox);
+            textFields.Add(textBox); 
+
         }
 
         private void Save(string filePath) {
@@ -65,6 +66,7 @@ namespace Notepad {
             var textField = textFields[tabControl1.SelectedIndex];
 
             textField.IsSaved = true;
+
             sw.WriteLine(textField.Text);
             sw.Close();
         }
@@ -84,9 +86,7 @@ namespace Notepad {
             menuSave.Enabled = true;
 
         }
+        
 
-        private void Edit(object sender, EventArgs e) {
-            textFields[tabControl1.SelectedIndex].IsSaved = false;
-        }
     }
 }
