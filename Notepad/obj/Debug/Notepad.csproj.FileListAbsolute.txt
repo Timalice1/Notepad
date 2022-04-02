@@ -10,3 +10,4 @@ C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.csproj
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.exe
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.pdb
 C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.About.resources
+C:\Users\admin\Desktop\My_Folder\Csharp\Notepad\Notepad\obj\Debug\Notepad.Find.resources

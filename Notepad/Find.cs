@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Notepad {
-    public partial class About : Form {
-        public About() {
+    public partial class Find : Form {
+        public Find() {
             InitializeComponent();
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            System.Diagnostics.Process.Start("https://github.com/Timalice1");
+        public string FindText { get; private set; }
+
+        private void button1_Click(object sender, EventArgs e) {
+            FindText = textBox1.Text;
+            this.Close();
         }
+
+        
     }
 }

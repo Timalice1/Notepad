@@ -9,18 +9,30 @@ namespace Notepad {
             InitializeComponent();
             menuSave.Enabled = false;
             menuSaveAs.Enabled = false;
+            selectAllToolStripMenuItem.Enabled = false;
+            cutToolStripMenuItem.Enabled = false;
+            copyToolStripMenuItem.Enabled = false;
+            pasteToolStripMenuItem.Enabled = false;
+            findToolStripMenuItem.Enabled = false;
         }
 
         private List<TextField> textFields = new List<TextField>();
 
         private void menuCreateNew_Click(object sender, EventArgs e) {
-            var tab = new TabPage("tabPage");
+            var tab = new TabPage("tabPage ");
             tab.Font = new System.Drawing.Font("Calibri", 10);
             tabControl1.SelectedTab = tab;
             tab.BorderStyle = BorderStyle.FixedSingle;
             var textBox = new TextField(tab);
             tabControl1.TabPages.Add(tab);
+
             menuSaveAs.Enabled = true;
+            selectAllToolStripMenuItem.Enabled = true;
+            cutToolStripMenuItem.Enabled = true;
+            copyToolStripMenuItem.Enabled = true;
+            pasteToolStripMenuItem.Enabled = true;
+            findToolStripMenuItem.Enabled = true;
+
             textBox.IsSaved = false;
             textBox.TextChanged += new EventHandler(textBox_TextChanged);
 
@@ -28,11 +40,15 @@ namespace Notepad {
         }
 
         private void menuClose_Click(object sender, EventArgs e) {
-            foreach(var textField in textFields) {
-                if (!textField.IsSaved) {
-                    MessageBox.Show($"File {textField.Parent.Text} has unsaved changes");
+            if (!textFields[tabControl1.SelectedIndex].IsSaved)
+               
+                if (MessageBox.Show($"{tabControl1.SelectedTab.Text.Remove(tabControl1.SelectedTab.Text.LastIndexOf(" "))} " +
+                    "has unsaved changes.\nSave it?",
+                    "Close",
+                    MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                    menuSaveAs_Click(sender, e);
                 }
-            }
+                else return;
             textFields.RemoveAt(tabControl1.SelectedIndex);
             tabControl1.TabPages.Remove(tabControl1.SelectedTab);
         }
@@ -49,21 +65,28 @@ namespace Notepad {
 
             string filePath = dialog.FileName;
 
-            var tab = new TabPage(filePath);
+            var tab = new TabPage(filePath + " ");
             tab.Font = new System.Drawing.Font("Calibri", 10);
 
 
             tabControl1.SelectedTab = tab;
             tabControl1.TabPages.Add(tab);
             tab.BorderStyle = BorderStyle.FixedSingle;
+
+            StreamReader sr = new StreamReader(filePath);
+
             var textBox = new TextField(tab);
             textBox.TextChanged += new EventHandler(textBox_TextChanged);
 
-            StreamReader sr = new StreamReader(filePath);
             textBox.Text = sr.ReadToEnd();
 
             menuSave.Enabled = true;
             menuSaveAs.Enabled = true;
+            selectAllToolStripMenuItem.Enabled = true;
+            cutToolStripMenuItem.Enabled = true;
+            copyToolStripMenuItem.Enabled = true;
+            pasteToolStripMenuItem.Enabled = true;
+            findToolStripMenuItem.Enabled = true;
 
             sr.Close();
 
@@ -107,5 +130,58 @@ namespace Notepad {
             textFields[tabControl1.SelectedIndex].Parent.Text += " *";
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            foreach(var field in textFields) {
+                if (!field.IsSaved) {
+                    if (MessageBox.Show($"{field.Parent.Text.Remove(field.Parent.Text.LastIndexOf(" "))} has unsaved changes.\nSave it?",
+                    "Close",
+                    MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                        menuSaveAs_Click(sender, e);
+                        tabControl1.TabPages.Remove((TabPage)field.Parent);
+                    }
+                    else {
+                        tabControl1.TabPages.Remove((TabPage)field.Parent);
+                        continue;
+                    }
+                }
+            }
+        }
+
+        private string buffer = "";
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e) {
+            textFields[tabControl1.SelectedIndex].SelectAll();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
+            buffer = textFields[tabControl1.SelectedIndex].SelectedText;
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e) {
+            textFields[tabControl1.SelectedIndex].SelectedText = buffer;
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e) {
+            buffer = textFields[tabControl1.SelectedIndex].SelectedText;
+            textFields[tabControl1.SelectedIndex].SelectedText = "";
+        }
+
+        private void findToolStripMenuItem_Click(object sender, EventArgs e) {
+            var find = new Find();
+            find.ShowDialog();
+            string findingText = find.FindText;
+            if(findingText != null) {
+                if (textFields[tabControl1.SelectedIndex].Text.Contains(findingText)) {
+                    int start = textFields[tabControl1.SelectedIndex].Text.IndexOf(findingText);
+                    textFields[tabControl1.SelectedIndex].Select(start, findingText.Length);
+                }
+                else 
+                    MessageBox.Show("Word don't found...");
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+            new About().ShowDialog();
+        }
     }
 }
